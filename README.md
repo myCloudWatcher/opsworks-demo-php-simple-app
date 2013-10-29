@@ -17,7 +17,9 @@ Version1 does not require any special configuraion. Simply deploy it and point y
 
 ## Branch: version2
 
-Version2 requires setting the following attributes in the Stack JSON, where `app-name` is the shortname
+The document root of this branch is `web`. Set it in the OpsWorks app settings.
+
+Set the following attributes in the Stack JSON, where `app-name` is the shortname
 of the app:
 
     "deploy" : {
