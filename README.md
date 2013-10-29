@@ -19,11 +19,11 @@ Version1 does not require any special configuraion. Simply deploy it and point y
 
 Version2 requires setting the following attributes in the Stack JSON:
 
-"deploy" : {
-  "database" : {
-    "host":     "mysql-host-name", # The name of the database host
-    "username": "db-user",         # The user of the DB
-    "password": "db-password",     # That user's password
-    "database": "simple_php_demo"  # The name of the database
-  }
-}
+    "deploy" : {
+      "database" : {
+        "host":     "mysql-host-name", # The name of the database host
+        "username": "db-user",         # The user of the DB
+        "password": "db-password",     # That user's password
+        "database": "simple_php_demo"  # The name of the database
+      }
+    }
