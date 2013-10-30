@@ -31,6 +31,7 @@ of the app:
           "username": "db-user",         # The user of the DB
           "password": "db-password",     # That user's password
           "database": "simple_php_demo"  # The name of the database
+          "table"   : "demo_table"       # The table in the DB
         }
       }
     }
