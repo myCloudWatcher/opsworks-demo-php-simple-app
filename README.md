@@ -30,8 +30,9 @@ of the app:
           "host":     "mysql-host-name", # The name of the database host
           "username": "db-user",         # The user of the DB
           "password": "db-password",     # That user's password
-          "database": "simple_php_demo"  # The name of the database
-          "table"   : "demo_table"       # The table in the DB
+          "database": "simple_php_demo", # The name of the database
+          "table"   : "demo_table",      # The table in the DB
+          "adapter" : "mysqli"           # The PHP MySQL adapter to use.
         }
       }
     }
