@@ -3,4 +3,4 @@
 # This file is a ruby script, run in the context of a chef 'deploy' action.
 # It can access all resources available to the Chef recipe.
 
-Chef::Log.debug("after_restart.rb: node is #{node.inspect}")
+Chef::Log.debug("after_restart.rb is running.")
