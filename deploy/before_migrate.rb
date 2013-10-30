@@ -10,19 +10,19 @@ node[:deploy].each do |app_name, deploy|
   
   Chef::Log.debug("execute mysql-create-database... resource declaring now.")
   
-  execute "mysql-create-database in database #{deploy[:database][:database]}" do
-    command "/usr/bin/mysql -u#{deploy[:database][:username]} -p#{deploy[:database][:password]} -e'CREATE DATABASE IF NOT EXISTS #{deploy[:database][:database]}'"
-    not_if "/usr/bin/mysql -u#{deploy[:database][:username]} -p#{deploy[:database][:password]} -e'SHOW DATABASES' | grep #{deploy[:database][:database]}"
+  execute "mysql-create-database #{deploy[:database][:database]}" do
+    command "/usr/bin/mysql -h #{deploy[:database][:host]} -u #{deploy[:database][:username]} -p'#{deploy[:database][:password]}' -e 'CREATE DATABASE IF NOT EXISTS #{deploy[:database][:database]}'"
+    not_if "/usr/bin/mysql -h #{deploy[:database][:host]} -u #{deploy[:database][:username]} -p'#{deploy[:database][:password]}' -e 'SHOW DATABASES' | fgrep #{deploy[:database][:database]}"
   end
 
-  execute "mysql-create-table in database #{deploy[:database][:database]}" do
-    command "/usr/bin/mysql -u#{deploy[:database][:username]} -p#{deploy[:database][:password]} #{deploy[:database][:database]} -e'CREATE TABLE #{deploy[:database][:table]}(
+  execute "mysql-create-table #{deploy[:database][:database]}" do
+    command "/usr/bin/mysql -h #{deploy[:database][:host]} -u #{deploy[:database][:username]} -p'#{deploy[:database][:password]}' #{deploy[:database][:database]} -e 'CREATE TABLE #{deploy[:database][:table]}(
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     author VARCHAR(63) NOT NULL,
     message TEXT,
     PRIMARY KEY (id)
   )'"
-    not_if "/usr/bin/mysql -u#{deploy[:database][:username]} -p#{deploy[:database][:password]} #{deploy[:database][:database]} -e'SHOW TABLES' | grep #{deploy[:database][:table]}"
+    not_if "/usr/bin/mysql -h #{deploy[:database][:host]} -u #{deploy[:database][:username]} -p'#{deploy[:database][:password]}' #{deploy[:database][:database]} -e 'SHOW TABLES' | grep #{deploy[:database][:table]}"
   end
 
   # In this example, the following code block directly executes a resource from
