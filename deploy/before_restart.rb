@@ -21,7 +21,7 @@ node[:deploy].each do |app_name, deploy|
   end
   
   template "#{deploy[:deploy_to]}/current/db-connect.php" do
-    source "db-connect.php.erb"
+    source "demo-db-connect.php.erb"
     cookbook "mcw_deploy" # assumption: the mcw_deploy cookbook will be in the custom cookbook repo and available in this chef run
     mode 00660
     group deploy[:group]
