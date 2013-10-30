@@ -13,24 +13,18 @@ node[:deploy].each do |app_name, deploy|
   execute "mysql-create-database in database #{deploy[:database][:database]}" do
     command "/usr/bin/mysql -u#{deploy[:database][:username]} -p#{deploy[:database][:password]} -e'CREATE DATABASE IF NOT EXISTS #{deploy[:database][:database]}'"
     not_if "/usr/bin/mysql -u#{deploy[:database][:username]} -p#{deploy[:database][:password]} -e'SHOW DATABASES' | grep #{deploy[:database][:database]}"
-    #action :nothing
-  end#.run_action(:run)
-  
-  Chef::Log.debug("execute mysql-create-table... resource declaring now.")
+  end
 
   execute "mysql-create-table in database #{deploy[:database][:database]}" do
-    command "/usr/bin/mysql -u#{deploy[:database][:username]} -p#{deploy[:database][:password]} #{deploy[:database][:database]} -e'CREATE TABLE #{node[:phpapp][:dbtable]}(
+    command "/usr/bin/mysql -u#{deploy[:database][:username]} -p#{deploy[:database][:password]} #{deploy[:database][:database]} -e'CREATE TABLE #{deploy[:database][:table]}(
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     author VARCHAR(63) NOT NULL,
     message TEXT,
     PRIMARY KEY (id)
   )'"
-    not_if "/usr/bin/mysql -u#{deploy[:database][:username]} -p#{deploy[:database][:password]} #{deploy[:database][:database]} -e'SHOW TABLES' | grep #{node[:phpapp][:dbtable]}"
-    #action :nothing
-  end#.run_command(:run)
+    not_if "/usr/bin/mysql -u#{deploy[:database][:username]} -p#{deploy[:database][:password]} #{deploy[:database][:database]} -e'SHOW TABLES' | grep #{deploy[:database][:table]}"
+  end
 
-
-  Chef::Log.debug("script install_composer... resource declaring now.")
   # In this example, the following code block directly executes a resource from
   # a public URL. Please, don't do this in your code. It's a gaping security hole.
   # Instead, consider creating a mirror of the public resource.
@@ -42,13 +36,11 @@ node[:deploy].each do |app_name, deploy|
     curl -s https://getcomposer.org/installer | php
     php composer.phar install
     EOH
-    #action :nothing
-  end#.run_command(:run)
+  end
   
-  Chef::Log.debug("template #{deploy[:deploy_to]}/current/db-connect.php resource declaring now.")
   template "#{deploy[:deploy_to]}/current/db-connect.php" do
     source "db-connect.php.erb"
-    cookbook "mcw_deploy"
+    cookbook "mcw_deploy" # assumption: this cookbook will be in the custom cookbook repo
     mode 0660
     group deploy[:group]
 
@@ -63,12 +55,11 @@ node[:deploy].each do |app_name, deploy|
       :user =>     (deploy[:database][:username] rescue nil),
       :password => (deploy[:database][:password] rescue nil),
       :db =>       (deploy[:database][:database] rescue nil),
-      :table =>    (node[:phpapp][:dbtable] rescue nil)
+      :table =>    (deploy[:database][:table] rescue nil)
     )
 
    only_if do
      File.directory?("#{deploy[:deploy_to]}/current")
    end
-   #action :nothing
-  end#.run_command(:create)
+  end
 end
