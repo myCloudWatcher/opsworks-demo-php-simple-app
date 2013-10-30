@@ -22,8 +22,8 @@ node[:deploy].each do |app_name, deploy|
   
   template "#{deploy[:deploy_to]}/current/db-connect.php" do
     source "db-connect.php.erb"
-    cookbook "mcw_deploy" # assumption: this cookbook will be in the custom cookbook repo
-    mode 0660
+    cookbook "mcw_deploy" # assumption: the mcw_deploy cookbook will be in the custom cookbook repo and available in this chef run
+    mode 00660
     group deploy[:group]
 
     if platform?("ubuntu")
@@ -41,7 +41,7 @@ node[:deploy].each do |app_name, deploy|
     )
 
     only_if do
-      File.directory?("#{deploy[:deploy_to]}/current")
+      ::File.directory?("#{deploy[:deploy_to]}/current")
     end
   end
   
