@@ -7,11 +7,11 @@ Chef::Log.debug("before_migrate.rb is running")
 node[:deploy].each do |app_name, deploy|
   Chef::Log.debug("Looking at app #{app_name}")
   next unless deploy[:database]
-  next unless deploy_item[:database][:host]
-  next unless deploy_item[:database][:username]
-  next unless deploy_item[:database][:password]
-  next unless deploy_item[:database][:database]
-  next unless deploy_item[:database][:table]
+#  next unless deploy_item[:database][:host]
+#  next unless deploy_item[:database][:username]
+#  next unless deploy_item[:database][:password]
+#  next unless deploy_item[:database][:database]
+#  next unless deploy_item[:database][:table]
   
   execute "mysql-create-database #{deploy[:database][:database]}" do
     command "/usr/bin/mysql -h #{deploy[:database][:host]} -u #{deploy[:database][:username]} -p'#{deploy[:database][:password]}' -e 'CREATE DATABASE IF NOT EXISTS #{deploy[:database][:database]}'"
