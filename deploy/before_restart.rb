@@ -5,7 +5,7 @@
 
 Chef::Log.debug("before_restart.rb is running.")
 
-node[:deploy].each do |app_name, deploy|
+node[:deploy].each do |app_name, deploy_item|
   
   # In this example, the following code block directly executes a resource from
   # a public URL. Please, don't do this in your code. It's a gaping security hole.
@@ -13,18 +13,18 @@ node[:deploy].each do |app_name, deploy|
   script "install_composer for app #{app_name}" do
     interpreter "bash"
     user "root"
-    cwd "#{deploy[:deploy_to]}/current"
+    cwd "#{deploy_item[:deploy_to]}/current"
     code <<-EOH
     curl -s https://getcomposer.org/installer | php
     php composer.phar install
     EOH
   end
   
-  template "#{deploy[:deploy_to]}/current/db-connect.php" do
+  template "#{deploy_item[:deploy_to]}/current/db-connect.php" do
     source "demo-db-connect.php.erb"
     cookbook "mcw_deploy" # assumption: the mcw_deploy cookbook will be in the custom cookbook repo and available in this chef run
     mode 00660
-    group deploy[:group]
+    group deploy_item[:group]
 
     if platform?("ubuntu")
       owner "www-data"
@@ -33,15 +33,15 @@ node[:deploy].each do |app_name, deploy|
     end
 
     variables(
-      :host =>     (deploy[:database][:host] rescue nil),
-      :user =>     (deploy[:database][:username] rescue nil),
-      :password => (deploy[:database][:password] rescue nil),
-      :db =>       (deploy[:database][:database] rescue nil),
-      :table =>    (deploy[:database][:table] rescue nil)
+      :host =>     (deploy_item[:database][:host] rescue nil),
+      :user =>     (deploy_item[:database][:username] rescue nil),
+      :password => (deploy_item[:database][:password] rescue nil),
+      :db =>       (deploy_item[:database][:database] rescue nil),
+      :table =>    (deploy_item[:database][:table] rescue nil)
     )
 
     only_if do
-      ::File.directory?("#{deploy[:deploy_to]}/current")
+      ::File.directory?("#{deploy_item[:deploy_to]}/current")
     end
   end
   
